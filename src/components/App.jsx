@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 
 import Section from './Section';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import FilterForm from './FilterForm';
 
-const LS_KEY = 'phonebook';
+// const LS_KEY = 'phonebook';
 
 const App = () => {
   // useEffect(() => {
