@@ -1,8 +1,19 @@
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+
+import { setFilter } from 'redux/filterSlice';
+
+// import PropTypes from 'prop-types';
 
 import { Container, Label, Input } from './FilterForm.styled';
 
-const FilterForm = ({ setFilter }) => {
+const FilterForm = () => {
+  const dispatch = useDispatch();
+
+  const handleChange = e => {
+    const filterString = e.target.value;
+    dispatch(setFilter(filterString.toLowerCase()));
+  };
+
   return (
     <Container>
       <Label>Find contacts by name</Label>
@@ -11,7 +22,7 @@ const FilterForm = ({ setFilter }) => {
         name="personName"
         id="personName"
         autocomplete="off"
-        onChange={setFilter}
+        onChange={handleChange}
         required
       />
     </Container>
@@ -20,6 +31,6 @@ const FilterForm = ({ setFilter }) => {
 
 export default FilterForm;
 
-FilterForm.propTypes = {
-  setFilter: PropTypes.func.isRequired,
-};
+// FilterForm.propTypes = {
+//   setFilter: PropTypes.func.isRequired,
+// };

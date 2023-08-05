@@ -1,15 +1,15 @@
 import styled from 'styled-components';
 
-export const Ul = styled.ul`
+export const UlStyled = styled.ul`
   width: 100%;
   list-style: square;
 `;
 
-export const Li = styled.li`
+export const LiStyled = styled.li`
   padding: 4px;
 `;
 
-export const Span = styled.span`
+export const SpanStyled = styled.span`
   display: inline-block;
   width: calc((100% - 80px) / 2);
   min-width: 200px;
@@ -17,4 +17,4 @@ export const Span = styled.span`
   text-overflow: ellipsis;
 `;
 
-export const Button = styled.button``;
+export const ButtonStyled = styled.button``;

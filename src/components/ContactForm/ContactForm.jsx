@@ -1,73 +1,94 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { Form, Label, Input, Button } from './ContactForm.styled';
+import { addContact } from 'redux/contactsSlice';
 
-const ContactForm = ({ createPerson }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+import { nanoid } from 'nanoid';
 
-  const handleInput = ({ target }) => {
-    const { name: inputName, value } = target;
+// import PropTypes from 'prop-types';
 
-    switch (inputName) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        console.log(name, value);
-    }
+import {
+  FormStyled,
+  LabelStyled,
+  InputStyled,
+  ButtonStyled,
+} from './ContactForm.styled';
+
+const ContactForm = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts);
+
+  const normalize = sentence => {
+    const wordsArr = sentence
+      .trim()
+      .replace(/  +/g, ' ')
+      .toLowerCase()
+      .split(' ');
+
+    const normSentence = wordsArr
+      .map(word => {
+        const [first, ...rest] = word;
+        return first.toUpperCase() + rest.join('');
+      })
+      .join(' ');
+
+    return normSentence;
   };
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    createPerson({
-      name: name.trim(),
-      number: number.trim(),
-    });
+    const currentForm = e.target;
+    const { name, number } = currentForm.elements;
 
-    setName('');
-    setNumber('');
+    const newContact = {
+      id: nanoid(),
+      name: normalize(name.value),
+      number: number.value,
+    };
+
+    if (contacts.some(person => newContact.name === person.name)) {
+      alert(`${newContact.name} is already in contacts.`);
+    } else {
+      dispatch(addContact(newContact));
+      alert(`${newContact.name} has been added to contacts.`);
+    }
+    return currentForm.reset();
   };
 
   return (
-    <Form onSubmit={handleSubmit} autocomplete="off">
-      <Label htmlFor="name">Name</Label>
-      <Input
+    <FormStyled onSubmit={handleSubmit} autocomplete="off">
+      <LabelStyled htmlFor="name">Name</LabelStyled>
+      <InputStyled
         type="text"
         name="name"
         id="name"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+        // pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         autocomplete="off"
-        onChange={handleInput}
-        value={name}
+        // onChange={handleInput}
+        // value={name}
         required
       />
-      <Label htmlFor="number">Number</Label>
-      <Input
+      <LabelStyled htmlFor="number">Number</LabelStyled>
+      <InputStyled
         type="tel"
         name="number"
         id="number"
         title="Phone number must be at least 5 digits, can contain spaces, dashes, parentheses and can start with +"
         placeholder="+ ..."
-        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+        // pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         autocomplete="off"
-        onChange={handleInput}
-        value={number}
+        // onChange={handleInput}
+        // value={number}
         required
       />
-      <Button type="submit">Add contact</Button>
-    </Form>
+      <ButtonStyled type="submit">Add contact</ButtonStyled>
+    </FormStyled>
   );
 };
 
 export default ContactForm;
 
-ContactForm.propTypes = {
-  createPerson: PropTypes.func.isRequired,
-};
+// ContactForm.propTypes = {
+//   createPerson: PropTypes.func.isRequired,
+// };
